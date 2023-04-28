@@ -12,16 +12,16 @@
 
 typedef int32_t sfra_signal_t;
 typedef int64_t sfra_integral_t;
-#else
+#else // #if(SFRA_INT)
 #include <math.h>
 // Use float accelerated trigonometric functions.
 #define SFRA_FLOAT_SIN(omega) sinf(omega)
 #define SFRA_FLOAT_COS(omega) cosf(omega)
-#endif
+#endif // #if(SFRA_INT)
 
 typedef float sfra_float_t;
 typedef uint32_t sfra_size_t;
-typedef int16_t sfra_flag_t;
+typedef int_least8_t sfra_flag_t;
 
 typedef struct {
     sfra_float_t *ctrl_real;
@@ -81,6 +81,7 @@ void sfra_init_all(void);
 void sfra_start(sfra_t* sfra);
 sfra_flag_t sfra_is_running(sfra_t* sfra);
 sfra_flag_t sfra_is_done(sfra_t* sfra);
+void sfra_clear_done(sfra_t* sfra);
 void sfra_background_task(sfra_t* sfra);
 
 #if(SFRA_INT)

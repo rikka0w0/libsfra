@@ -1,5 +1,7 @@
 #include "libsfra.h"
 
+#ifdef SFRA_TEST_C2000
+
 #include <math.h>
 
 #include "F28x_Project.h"
@@ -77,3 +79,4 @@ void sfra_test_run(void) {
 void sfra_test_background_task(void) {
     sfra_background_task(&sfra_struct);
 }
+#endif // #ifdef SFRA_TEST_C2000

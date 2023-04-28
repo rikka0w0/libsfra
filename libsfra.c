@@ -19,8 +19,15 @@ sfra_flag_t sfra_is_done(sfra_t* sfra) {
     return sfra->internal_state.done;
 }
 
-static void set_if_nonnull(sfra_float_t* target, sfra_float_t value) {
-    if (target != 0) {
+void sfra_clear_done(sfra_t* sfra) {
+    sfra->internal_state.done = 0;
+}
+
+
+static void set_float_if_nonnull(void* base, sfra_size_t offset, sfra_float_t value) {
+    if (base != 0) {
+        sfra_float_t* target = (sfra_float_t*) base;
+        target += offset;
         *target = value;
     }
 }
@@ -32,10 +39,10 @@ static void process_foi_data(sfra_t* sfra) {
     sfra_float_t dtft_real_den = sfra->internal_state.dtft_real_den;
     sfra_float_t dtft_nimg_den = sfra->internal_state.dtft_nimg_den;
 
-    set_if_nonnull(sfra->results.ctrl_real + freqIndex, dtft_real_den);
-    set_if_nonnull(sfra->results.ctrl_nimg + freqIndex, dtft_nimg_den);
-    set_if_nonnull(sfra->results.fb_real + freqIndex, dtft_real_num);
-    set_if_nonnull(sfra->results.fb_nimg + freqIndex, dtft_nimg_num);
+    set_float_if_nonnull(sfra->results.ctrl_real, freqIndex, dtft_real_den);
+    set_float_if_nonnull(sfra->results.ctrl_nimg, freqIndex, dtft_nimg_den);
+    set_float_if_nonnull(sfra->results.fb_real, freqIndex, dtft_real_num);
+    set_float_if_nonnull(sfra->results.fb_nimg, freqIndex, dtft_nimg_num);
 
     // Calculate gain in dB
     sfra_float_t mag = 10.0F * log10(
@@ -62,8 +69,8 @@ static void process_foi_data(sfra_t* sfra) {
         }
     }
 
-    set_if_nonnull(sfra->results.magnitudeVect + freqIndex, mag);
-    set_if_nonnull(sfra->results.phaseVect + freqIndex, phase);
+    set_float_if_nonnull(sfra->results.magnitudeVect, freqIndex, mag);
+    set_float_if_nonnull(sfra->results.phaseVect, freqIndex, phase);
 }
 
 static sfra_size_t calc_cycles(sfra_float_t foi_hz, sfra_float_t isrFreq) {
@@ -130,6 +137,7 @@ void sfra_background_task(sfra_t* sfra) {
     } else {
         // End of frequency sweep
         sfra->internal_state.running = 0;
+        sfra->internal_state.done = 1;
     }
 }
 
