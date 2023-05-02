@@ -142,6 +142,7 @@ void sfra_background_task(sfra_t* sfra) {
 }
 
 #if (SFRA_INT)
+SFRA_RAMFUNC(sfra_inject_int32)
 fast_tri_ret_type sfra_inject_int32(sfra_t* sfra) {
     if (sfra->internal_state.dtft_running) {
         fast_tri_omega_type omega = sfra->internal_state.foi_rad * sfra->internal_state.data_index;
@@ -155,6 +156,7 @@ fast_tri_ret_type sfra_inject_int32(sfra_t* sfra) {
     }
 }
 
+SFRA_RAMFUNC(sfra_monitor_int32)
 void sfra_monitor_int32(sfra_t* sfra, sfra_signal_t input, sfra_signal_t output) {
     if (!sfra->internal_state.dtft_running)
         return;
@@ -172,6 +174,7 @@ void sfra_monitor_int32(sfra_t* sfra, sfra_signal_t input, sfra_signal_t output)
     }
 }
 #else
+SFRA_RAMFUNC(sfra_inject)
 sfra_float_t sfra_inject(sfra_t* sfra) {
     if (sfra->internal_state.dtft_running) {
         sfra_float_t omega = sfra->internal_state.foi_rad * sfra->internal_state.data_index;
@@ -184,6 +187,7 @@ sfra_float_t sfra_inject(sfra_t* sfra) {
     }
 }
 
+SFRA_RAMFUNC(sfra_monitor)
 void sfra_monitor(sfra_t* sfra, sfra_float_t input, sfra_float_t output) {
     if (!sfra->internal_state.dtft_running)
         return;

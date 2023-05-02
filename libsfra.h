@@ -5,6 +5,21 @@
 
 #include "libsfra_config.h"
 
+/*
+ * In some MCU/DSP, code runs much faster in RAM.
+ * This is particular for the ISR routine and the function it may call.
+ * Placing them in the memory yields short execution time and less penalty.
+ *
+ * On STM32 GCC + Makefile:
+ * 1. Declare macro in "libsfra_config.h":
+ *      "#define SFRA_RAMFUNC(functionName) __attribute__ ((long_call, section (".ramfunc")))"
+ * 2. Add "*(.ramfunc)" to ".data" section.
+ *
+ */
+#ifndef SFRA_RAMFUNC
+#define SFRA_RAMFUNC(functionName)
+#endif
+
 #if(SFRA_INT)
 #include "fast_tri.h"
 
